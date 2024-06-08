@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yenshin Shop - Admin</title>
+  <link rel="stylesheet" href="assets/style.min.css">
+</head>
+<body>
+  <div class="admin-header row a-center j-between w-100">
+    <h1>Yenshin Shop Admin</h1>
+    <div class="nav a-center row gap-2">
+      <a href="index.html">Storefront</a>
+      <a href="#products">Manage Products</a>
+      <a href="#categories">Manage Categories</a>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <section id="products" class="column gap-2 a-center">
+      <h2>Manage Products</h2>
+      <div class="product-form">
+        <input type="text" id="product-title" placeholder="Product Title">
+        <input type="text" id="product-category" placeholder="Category">
+        <input type="number" id="product-price" placeholder="Price">
+        <input type="text" id="product-image" placeholder="Image URL">
+        <button id="add-product-btn">Add Product</button>
+      </div>
+      <div class="product-list">
+        <!-- Products will be dynamically added here -->
+      </div>
+    </section>
+
+    <section id="categories" class="column gap-2 a-center">
+      <h2>Manage Categories</h2>
+      <div class="category-form">
+        <input type="text" id="category-name" placeholder="Category Name">
+        <button id="add-category-btn">Add Category</button>
+      </div>
+      <div class="category-list">
+        <!-- Categories will be dynamically added here -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const productList = document.querySelector('.product-list');
+      const categoryList = document.querySelector('.category-list');
+
+      // Sample Data
+      let products = [
+        { title: 'Netflix Solo Profile', category: 'premium', price: 165, image: 'assets/img/prem.png' },
+        { title: 'Social Media Boosting', category: 'other', price: 100, image: 'assets/img/boosting.png' }
+      ];
+      let categories = ['all', 'premium', 'nitro', 'credits', 'other'];
+
+      // Function to render products
+      function renderProducts() {
+        productList.innerHTML = '';
+        products.forEach((product, index) => {
+          productList.innerHTML += `
+            <div class="product" data-index="${index}">
+              <img src="${product.image}" alt="${product.title}">
+              <div class="product-info">
+                <span>${product.title}</span>
+                <span>${product.category}</span>
+                <span>P${product.price}</span>
+                <button onclick="editProduct(${index})">Edit</button>
+                <button onclick="deleteProduct(${index})">Delete</button>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // Function to render categories
+      function renderCategories() {
+        categoryList.innerHTML = '';
+        categories.forEach((category, index) => {
+          categoryList.innerHTML += `
+            <div class="category" data-index="${index}">
+              <span>${category}</span>
+              <button onclick="deleteCategory(${index})">Delete</button>
+            </div>
+          `;
+        });
+      }
+
+      // Add product
+      document.getElementById('add-product-btn').addEventListener('click', function () {
+        const title = document.getElementById('product-title').value;
+        const category = document.getElementById('product-category').value;
+        const price = document.getElementById('product-price').value;
+        const image = document.getElementById('product-image').value;
+        products.push({ title, category, price, image });
+        renderProducts();
+      });
+
+      // Add category
+      document.getElementById('add-category-btn').addEventListener('click', function () {
+        const name = document.getElementById('category-name').value;
+        categories.push(name);
+        renderCategories();
+      });
+
+      // Edit product
+      window.editProduct = function (index) {
+        const product = products[index];
+        document.getElementById('product-title').value = product.title;
+        document.getElementById('product-category').value = product.category;
+        document.getElementById('product-price').value = product.price;
+        document.getElementById('product-image').value = product.image;
+        products.splice(index, 1);
+        renderProducts();
+      };
+
+      // Delete product
+      window.deleteProduct = function (index) {
+        products.splice(index, 1);
+        renderProducts();
+      };
+
+      // Delete category
+      window.deleteCategory = function (index) {
+        categories.splice(index, 1);
+        renderCategories();
+      };
+
+      // Initial render
+      renderProducts();
+      renderCategories();
+    });
+  </script>
+</body>
+</html>
